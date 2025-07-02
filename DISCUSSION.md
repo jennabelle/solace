@@ -3,7 +3,7 @@ Improvements I would make if I had more time:
 Database Optimization
 
 - Add database indices for fast lookups
-- This is text-based search on hundreds of thousands of advocates to search from, so I would further optimize search by using ElasticSearch or PostGRES full-text search capabilities
+- This is text-based search on hundreds of thousands of advocates, so I would further optimize by using ElasticSearch or PostGRES full-text search capabilities
 
 Backend
 
