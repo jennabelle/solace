@@ -1,6 +1,6 @@
 services:
   db:
-    image: postgres
+    image: postgres:17-alpine  # Alpine version uses less memory
     restart: always
     environment:
       POSTGRES_USER: postgres
