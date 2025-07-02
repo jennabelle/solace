@@ -357,7 +357,6 @@ export default function Home() {
               value={searchTerm}
               placeholder="Find a patient advocate by name, specialty, location, or credential..."
             />
-            {isSearching && <span className="self-center text-sm text-gray-600 ml-2">Searching...</span>}
           </div>
         </div>
 
