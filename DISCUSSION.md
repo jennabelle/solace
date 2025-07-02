@@ -22,5 +22,6 @@ Improvements I would make if I had more time:
 ### Repository
 
 - Add Typescript
+- Add absolute imports (instead of relative imports) for readability
 - Streamline repository folders e.g., separate folders to hold helper functions, reusable dumb components
 - Add GitHub dependabots to automate security vulnerability detection and resolution
