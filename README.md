@@ -23,7 +23,7 @@ The app is configured to return a default list of advocates. This will allow you
 1. Feel free to use whatever configuration of postgres you like. The project is set up to use docker-compose.yml to set up postgres. The url is in .env.
 
 ```bash
-docker compose up -d
+docker-compose up -d
 ```
 
 2. Create a `solaceassignment` database.
@@ -38,4 +38,11 @@ npx drizzle-kit push
 
 ```bash
 curl -X POST http://localhost:3000/api/seed
+```
+
+5. To access the postgresql database
+
+```
+brew install pgcli
+pgcli postgresql://postgres:password@localhost:5432/solaceassignment
 ```
