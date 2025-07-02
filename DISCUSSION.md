@@ -1,16 +1,16 @@
 Improvements I would make if I had more time:
 
-Database Optimization
+### Dabase Optimization
 
 - Add database indices for fast lookups
 - This is text-based search on hundreds of thousands of advocates, so I would further optimize by using ElasticSearch or PostGRES full-text search capabilities
 
-Backend
+### Backend
 
 - Ensure proper input validation to prevent XSS attacks, etc
 - Consider adding a cache like redis to optimize search
 
-Frontend
+### Frontend
 
 - Add hover state and "cursor:pointer" to each advocate card
 - Add accessibility features e.g. aria labels for screen readers to make it easy for disabled folks
@@ -19,7 +19,7 @@ Frontend
 - Add unit tests with React Testing Library
 - Ensure proper input validation to prevent XSS attacks, etc
 
-Repository
+### Repository
 
 - Add Typescript
 - Streamline repository folders e.g., separate folders to hold helper functions, reusable dumb components
