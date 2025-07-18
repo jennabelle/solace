@@ -20,13 +20,32 @@ export default function Home() {
   const [hasNextPage, setHasNextPage] = useState(false);
   const [hasPreviousPage, setHasPreviousPage] = useState(false);
 
+  // Filter by specialties state
+  const [availableSpecialties, setAvailableSpecialties] = useState([]);
+  const [selectedSpecialties, setSelectedSpecialties] = useState([]);
+  const [isLoadingSpecialties, setIsLoadingSpecialties] = useState(true);
+
   // Ref for search input and initial load tracking
-  const searchInputRef = useRef(null);
+  const searchInputRef = useRef(null); // useRef to persist across renders
   const isInitialLoad = useRef(true);
 
+  // Fetch all specialties on component mount
+  useEffect(() => {
+    fetch('/api/specialties')
+      .then(response => response.json())
+      .then(data => {
+        setAvailableSpecialties(data.data);
+        setIsLoadingSpecialties(false);
+      })
+      .catch(err => {
+        console.error('Error fetching specialties: ', err);
+        setIsLoadingSpecialties(false);
+      });
+  }, []);
+
   // Fetch advocates with pagination and search
-  const fetchAdvocates = useCallback((page = 1, limit = itemsPerPage, search = '', isInitialLoad = false) => {
-    console.log(`fetching advocates... page: ${page}, limit: ${limit}, search: ${search}`);
+  const fetchAdvocates = useCallback((page = 1, limit = itemsPerPage, search = '', specialtyIds = [], isInitialLoad = false) => {
+    console.log(`fetching advocates... page: ${page}, limit: ${limit}, search: ${search}, specialties: ${specialtyIds}`);
     if (isInitialLoad) {
       setIsLoading(true);
     }
@@ -38,6 +57,12 @@ export default function Home() {
       params.append('search', search);
     }
     
+
+    // Add specialties to params
+    if (specialtyIds.length > 0) {
+      params.append('specialties', specialtyIds.join(','));
+    }
+
     fetch(`/api/advocates?${params.toString()}`)
       .then((response) => {
         if (!response.ok) {
@@ -94,11 +119,11 @@ export default function Home() {
   // Fetch data when page, itemsPerPage, or debouncedSearchTerm changes
   useEffect(() => {
     const shouldSetLoading = isInitialLoad.current;
-    fetchAdvocates(currentPage, itemsPerPage, debouncedSearchTerm, shouldSetLoading);
-    if (isInitialLoad.current) {
+    fetchAdvocates(currentPage, itemsPerPage, debouncedSearchTerm, selectedSpecialties, shouldSetLoading);
+    if (isInitialLoad.current) { // After initial load, set to false
       isInitialLoad.current = false;
     }
-  }, [currentPage, itemsPerPage, debouncedSearchTerm, fetchAdvocates]);
+  }, [currentPage, itemsPerPage, debouncedSearchTerm, selectedSpecialties, fetchAdvocates]);
 
   const handleSearch = (e) => {
     setSearchTerm(e.target.value);
@@ -358,7 +383,97 @@ export default function Home() {
               placeholder="Find a patient advocate by name, specialty, location, or credential..."
             />
           </div>
-        </div>
+
+        {/* Add specialty filter #2 here */}
+        {/* <div className="mt-4 flex justify-center">
+          <div className="w-full max-w-2xl">
+            <select
+              multiple
+              value={selectedSpecialties.map(String)}
+              onChange={(e) => {
+                const selected = Array.from(e.target.selectedOptions, option => parseInt(option.value));
+                setSelectedSpecialties(selected);
+                setCurrentPage(1);
+              }}
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              size="5"
+            >
+              <option value="" disabled>Select specialties...</option>
+              {availableSpecialties.map(specialty => (
+                <option key={specialty.id} value={specialty.id}>
+                  {specialty.name}
+                </option>
+              ))}
+            </select>
+            
+            {selectedSpecialties.length > 0 && (
+              <button
+                onClick={() => setSelectedSpecialties([])}
+                className="mt-2 text-sm text-blue-600 hover:text-blue-800"
+              >
+                Clear filters ({selectedSpecialties.length} selected)
+              </button>
+            )}
+          </div>
+        </div> */}
+        {/* END */}
+
+
+
+          {/* Add specialty filter #1 here */}
+          <div className="mt-4 flex justify-center">
+            <div className="w-full max-w-2xl">
+              <details className="border border-gray-300 rounded-lg p-4">
+                <summary className="cursor-pointer font-medium text-gray-700 flex items-center justify-between">
+                  Filter by Specialty
+                  {selectedSpecialties.length > 0 && (
+                    <span className="ml-2 bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full">
+                      {selectedSpecialties.length} selected
+                    </span>
+                  )}
+                </summary>
+                
+                <div className="mt-4 space-y-2 max-h-60 overflow-y-auto">
+                  {isLoadingSpecialties ? (
+                    <div className="text-gray-500">Loading specialties...</div>
+                  ) : (
+                    <>
+                      {selectedSpecialties.length > 0 && (
+                        <button
+                          onClick={() => setSelectedSpecialties([])}
+                          className="text-sm text-blue-600 hover:text-blue-800 mb-2"
+                        >
+                          Clear all filters
+                        </button>
+                      )}
+                      
+                      {availableSpecialties.map(specialty => (
+                        <label key={specialty.id} className="flex items-center space-x-2 hover:bg-gray-50 p-2 rounded">
+                          <input
+                            type="checkbox"
+                            checked={selectedSpecialties.includes(specialty.id)}
+                            onChange={(e) => {
+                              if (e.target.checked) {
+                                setSelectedSpecialties([...selectedSpecialties, specialty.id]);
+                              } else {
+                                setSelectedSpecialties(selectedSpecialties.filter(id => id !== specialty.id));
+                              }
+                              // Reset to page 1 when filter changes
+                              setCurrentPage(1);
+                            }}
+                            className="rounded text-blue-600 focus:ring-blue-500"
+                          />
+                          <span className="text-sm text-gray-700">{specialty.name}</span>
+                        </label>
+                      ))}
+                    </>
+                  )}
+                </div>
+              </details>
+            </div>
+          </div>
+          {/* END */}
+          </div>
 
         <div className="container mx-auto px-4">
           {isLoading ? (

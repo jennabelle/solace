@@ -9,6 +9,10 @@ export async function GET(request) {
   const limit = parseInt(searchParams.get('limit') || '10', 10);
   const search = searchParams.get('search') || '';
 
+  // Parse specialty filter
+  const specialtyFilter = searchParams.get('specialties');
+  const specialtyIds = specialtyFilter ? specialtyFilter.split(',').map(id => parseInt(id, 10)) : [];
+
   // Calculate offset for pagination
   const offset = (page - 1) * limit;
 
@@ -26,6 +30,10 @@ export async function GET(request) {
         ilike(specialties.name, searchPattern)
       )
     );
+  }
+
+  if (specialtyIds.length > 0) {
+    searchConditions.push(inArray(advocateSpecialties.specialtyId, specialtyIds));
   }
 
   // Build base query for advocates
