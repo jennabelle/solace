@@ -384,42 +384,6 @@ export default function Home() {
             />
           </div>
 
-        {/* Add specialty filter #2 here */}
-        {/* <div className="mt-4 flex justify-center">
-          <div className="w-full max-w-2xl">
-            <select
-              multiple
-              value={selectedSpecialties.map(String)}
-              onChange={(e) => {
-                const selected = Array.from(e.target.selectedOptions, option => parseInt(option.value));
-                setSelectedSpecialties(selected);
-                setCurrentPage(1);
-              }}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              size="5"
-            >
-              <option value="" disabled>Select specialties...</option>
-              {availableSpecialties.map(specialty => (
-                <option key={specialty.id} value={specialty.id}>
-                  {specialty.name}
-                </option>
-              ))}
-            </select>
-            
-            {selectedSpecialties.length > 0 && (
-              <button
-                onClick={() => setSelectedSpecialties([])}
-                className="mt-2 text-sm text-blue-600 hover:text-blue-800"
-              >
-                Clear filters ({selectedSpecialties.length} selected)
-              </button>
-            )}
-          </div>
-        </div> */}
-        {/* END */}
-
-
-
           {/* Add specialty filter #1 here */}
           <div className="mt-4 flex justify-center">
             <div className="w-full max-w-2xl">
